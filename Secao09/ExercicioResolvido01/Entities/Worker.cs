@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Globalization;
 using System.Collections.Generic;
 
 namespace ExercicioResolvido01.Entities
@@ -10,7 +10,7 @@ namespace ExercicioResolvido01.Entities
 		public double BaseSalary { get; set; }
 		public Department Department { get; set; }
 
-		private List<HourContract> contracts = new List<HourContract>();
+		public List<HourContract> Contracts { get; private set; } = new List<HourContract>();
 
 		public Worker(string name, WorkerLevel level, double baseSalary, Department department)
 		{
@@ -22,24 +22,27 @@ namespace ExercicioResolvido01.Entities
 
 		public void AddContract(HourContract contract)
 		{
-			contracts.Add(contract);
+			Contracts.Add(contract);
 		}
 
 		public void RemoveContract(HourContract contract)
 		{
-			int contractToRemove = contracts.FindIndex(x => x == contract);
-			contracts.RemoveAt(contractToRemove);
+			int contractToRemove = Contracts.FindIndex(x => x == contract);
+			Contracts.RemoveAt(contractToRemove);
 		}
 
 		public double Income(int year, int month)
 		{
-			return 0.0;
-		}
+			List<HourContract> search = Contracts.FindAll(x => x.Date.Year == year && x.Date.Month == month);
 
-		public override string ToString()
-		{
-			string message = $"Name: {Name}, Department: {Department.Name}, Income: $ {BaseSalary:0.00}";
-			return message;
+			double totalIncome = BaseSalary;
+
+			foreach (HourContract s in search)
+			{
+				totalIncome += s.TotalValue();
+			}
+
+			return totalIncome;
 		}
 	}
 }

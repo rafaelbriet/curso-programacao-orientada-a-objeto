@@ -3,7 +3,7 @@
 	enum WorkerLevel
 	{
 		Junior,
-		MidLevel,
+		Mid,
 		Senior
 	}
 }
