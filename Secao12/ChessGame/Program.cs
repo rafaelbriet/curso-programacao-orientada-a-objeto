@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ChessGame.Board;
 
 namespace ChessGame
 {
@@ -10,6 +7,9 @@ namespace ChessGame
 	{
 		static void Main(string[] args)
 		{
+			Position position = new Position(3, 4);
+
+			Console.WriteLine($"Position: {position}");
 		}
 	}
 }
