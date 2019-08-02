@@ -13,5 +13,10 @@
 			Collumns = collumns;
 			pieces = new Piece[lines, collumns];
 		}
+
+		public Piece GetPieceAt(int line, int collumn)
+		{
+			return pieces[line, collumn];
+		}
 	}
 }
