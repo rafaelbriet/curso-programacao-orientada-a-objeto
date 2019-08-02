@@ -7,9 +7,9 @@
 		public Color Color { get; protected set; }
 		public int Movements { get; protected set; }
 
-		public Piece(Position position, GameBoard board, Color color)
+		public Piece(GameBoard board, Color color)
 		{
-			Position = position;
+			Position = null;
 			Board = board;
 			Color = color;
 			Movements = 0;
