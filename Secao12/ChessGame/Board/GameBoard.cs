@@ -35,6 +35,21 @@
 			piece.Position = position;
 		}
 
+		public Piece RemovePiece(Position position)
+		{
+			if (hasPiece(position) == false)
+			{
+				return null;
+			}
+
+			Piece piece = GetPieceAt(position);
+
+			piece.Position = null;
+			pieces[position.Line, position.Collumn] = null;
+
+			return piece;
+		}
+
 		public void ValidatePosition(Position position)
 		{
 			if (!isPositionValid(position))
