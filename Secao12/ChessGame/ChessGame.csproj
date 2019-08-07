@@ -48,6 +48,7 @@
     <Compile Include="Board\GameBoardExecption.cs" />
     <Compile Include="Board\Piece.cs" />
     <Compile Include="Board\Position.cs" />
+    <Compile Include="Chess\ChessPosition.cs" />
     <Compile Include="Chess\King.cs" />
     <Compile Include="Chess\Rook.cs" />
     <Compile Include="Program.cs" />
