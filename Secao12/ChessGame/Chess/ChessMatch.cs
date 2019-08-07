@@ -5,6 +5,7 @@ namespace ChessGame.Chess
 	class ChessMatch
 	{
 		public GameBoard GameBoard { get; private set; }
+		public bool HasMatchFinished { get; private set; }
 
 		private int currentTurn;
 		private Color currentPlayer;
@@ -12,6 +13,7 @@ namespace ChessGame.Chess
 		public ChessMatch()
 		{
 			GameBoard = new GameBoard(8, 8);
+			HasMatchFinished = false;
 			currentTurn = 1;
 			currentPlayer = Color.White;
 

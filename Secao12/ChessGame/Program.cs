@@ -8,16 +8,29 @@ namespace ChessGame
 	{
 		static void Main(string[] args)
 		{
-			try
-			{
-				ChessMatch chessMatch = new ChessMatch();
+			ChessMatch chessMatch = new ChessMatch();
 
-				UI.PrintBoard(chessMatch.GameBoard);
-			}
-			catch (Exception e)
+			while (chessMatch.HasMatchFinished == false)
 			{
-				Console.WriteLine(e.Message);
-				Console.WriteLine(e.StackTrace);
+				try
+				{
+					Console.Clear();
+
+					UI.PrintBoard(chessMatch.GameBoard);
+
+					Console.WriteLine();
+					Console.Write("Origem: ");
+					Position origin = UI.ReadPosition().ToPosition();
+					Console.Write("Destino: ");
+					Position destination = UI.ReadPosition().ToPosition();
+
+					chessMatch.Move(origin, destination);
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e.Message);
+					Console.WriteLine(e.StackTrace);
+				}
 			}
 
 			Console.ReadLine();

@@ -1,5 +1,6 @@
 ﻿using System;
 using ChessGame.Board;
+using ChessGame.Chess;
 
 namespace ChessGame
 {
@@ -48,6 +49,16 @@ namespace ChessGame
 				default:
 					break;
 			}
+		}
+
+		public static ChessPosition ReadPosition()
+		{
+			string input = Console.ReadLine();
+
+			int line = int.Parse(input[1] + "");
+			char collumn = input[0];
+
+			return new ChessPosition(line, collumn);
 		}
 	}
 }
