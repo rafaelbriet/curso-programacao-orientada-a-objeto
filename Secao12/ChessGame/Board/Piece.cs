@@ -1,6 +1,6 @@
 ﻿namespace ChessGame.Board
 {
-	class Piece
+	abstract class Piece
 	{
 		public Position Position { get; set; }
 		public GameBoard Board { get; protected set; }
@@ -19,5 +19,21 @@
 		{
 			Movements++;
 		}
+
+		public bool CanMove(Position position)
+		{
+			Piece piece = Board.GetPieceAt(position);
+
+			if (piece == null || piece.Color != Color)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public abstract bool[,] ValidMoves();
 	}
 }

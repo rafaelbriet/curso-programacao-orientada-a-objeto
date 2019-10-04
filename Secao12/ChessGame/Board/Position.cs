@@ -11,6 +11,12 @@
 			Collumn = collumn;
 		}
 
+		public void SetPosition(int line, int collumn)
+		{
+			Line = line;
+			Collumn = collumn;
+		}
+
 		public override string ToString()
 		{
 			return $"{Line}, {Collumn}";

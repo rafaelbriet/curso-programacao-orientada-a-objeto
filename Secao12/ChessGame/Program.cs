@@ -15,12 +15,17 @@ namespace ChessGame
 				try
 				{
 					Console.Clear();
-
 					UI.PrintBoard(chessMatch.GameBoard);
 
 					Console.WriteLine();
 					Console.Write("Origem: ");
 					Position origin = UI.ReadPosition().ToPosition();
+
+					bool[,] validMoves = chessMatch.GameBoard.GetPieceAt(origin).ValidMoves();
+
+					Console.Clear();
+					UI.PrintBoard(chessMatch.GameBoard, validMoves);
+
 					Console.Write("Destino: ");
 					Position destination = UI.ReadPosition().ToPosition();
 
