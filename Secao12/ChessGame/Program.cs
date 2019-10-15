@@ -18,23 +18,34 @@ namespace ChessGame
 					UI.PrintBoard(chessMatch.GameBoard);
 
 					Console.WriteLine();
-					Console.Write("Origem: ");
+					Console.WriteLine("Current turn: {0}", chessMatch.CurrentTurn);
+					Console.WriteLine("Waiting for the {0} move", chessMatch.CurrentPlayer);
+
+					Console.WriteLine();
+					Console.Write("Origin: ");
 					Position origin = UI.ReadPosition().ToPosition();
+
+					chessMatch.ValidateOriginPosition(origin);
 
 					bool[,] validMoves = chessMatch.GameBoard.GetPieceAt(origin).ValidMoves();
 
 					Console.Clear();
 					UI.PrintBoard(chessMatch.GameBoard, validMoves);
 
-					Console.Write("Destino: ");
+					Console.WriteLine();
+					Console.Write("Destination: ");
+
 					Position destination = UI.ReadPosition().ToPosition();
 
-					chessMatch.Move(origin, destination);
+					chessMatch.ValidateDestinationPosition(origin, destination);
+
+					chessMatch.PerformMove(origin, destination);
 				}
 				catch (Exception e)
 				{
 					Console.WriteLine(e.Message);
 					Console.WriteLine(e.StackTrace);
+					Console.ReadLine();
 				}
 			}
 

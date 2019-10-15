@@ -7,15 +7,15 @@ namespace ChessGame.Chess
 		public GameBoard GameBoard { get; private set; }
 		public bool HasMatchFinished { get; private set; }
 
-		private int currentTurn;
-		private Color currentPlayer;
+		public int CurrentTurn { get; private set; }
+		public Color CurrentPlayer { get; private set; }
 
 		public ChessMatch()
 		{
 			GameBoard = new GameBoard(8, 8);
 			HasMatchFinished = false;
-			currentTurn = 1;
-			currentPlayer = Color.White;
+			CurrentTurn = 1;
+			CurrentPlayer = Color.White;
 
 			StartMatch();
 		}
@@ -29,6 +29,53 @@ namespace ChessGame.Chess
 			Piece CapturedPiece = GameBoard.RemovePiece(destination);
 
 			GameBoard.AddPiece(piece, destination);
+		}
+
+		public void PerformMove(Position origin, Position destination)
+		{
+			Move(origin, destination);
+
+			CurrentTurn++;
+
+			ChangePlayer();
+		}
+
+		public void ValidateOriginPosition(Position position)
+		{
+			if (GameBoard.GetPieceAt(position) == null)
+			{
+				throw new GameBoardExecption("There is no piece in the chosen position.");
+			}
+
+			if (CurrentPlayer != GameBoard.GetPieceAt(position).Color)
+			{
+				throw new GameBoardExecption("Can't move a piece from other player.");
+			}
+
+			if (GameBoard.GetPieceAt(position).HasValidMoves() == false)
+			{
+				throw new GameBoardExecption("There is no valid movement for the chosen piece.");
+			}
+		}
+
+		public void ValidateDestinationPosition(Position origin, Position destination)
+		{
+			if (GameBoard.GetPieceAt(origin).CanMoveTo(destination) == false)
+			{
+				throw new GameBoardExecption("Can't move the chosen piece to this position.");
+			}
+		}
+
+		private void ChangePlayer()
+		{
+			if (CurrentPlayer == Color.White)
+			{
+				CurrentPlayer = Color.Black;
+			}
+			else
+			{
+				CurrentPlayer = Color.White;
+			}
 		}
 
 		private void StartMatch()

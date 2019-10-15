@@ -34,6 +34,29 @@
 			}
 		}
 
+		public bool CanMoveTo(Position position)
+		{
+			return ValidMoves()[position.Line, position.Collumn];
+		}
+
+		public bool HasValidMoves()
+		{
+			bool[,] moves = ValidMoves();
+
+			for (int x = 0; x < Board.Lines; x++)
+			{
+				for (int y = 0; y < Board.Collumns; y++)
+				{
+					if (moves[x, y] == true)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
 		public abstract bool[,] ValidMoves();
 	}
 }
