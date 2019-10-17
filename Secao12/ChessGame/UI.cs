@@ -23,6 +23,41 @@ namespace ChessGame
 			Console.WriteLine("  A B C D E F G H");
 		}
 
+		public static void PrintGameStatus(ChessMatch match)
+		{
+			ConsoleColor defaultColor = Console.ForegroundColor;
+
+			Console.WriteLine();
+			Console.WriteLine("Current turn: {0}", match.CurrentTurn);
+
+			if (match.CurrentPlayer == Color.White)
+			{
+				Console.WriteLine("Waiting for the white player move");
+			}
+			else
+			{
+				Console.WriteLine("Waiting for the black player move");
+			}
+
+			Console.WriteLine();
+			Console.Write("White pieces captured: ");
+			foreach (Piece p in match.GetCapturedPiecesByColor(Color.White))
+			{
+				Console.Write(p + " ");
+			}
+
+			Console.WriteLine();
+			Console.Write("Black pieces captured: ");
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			foreach (Piece p in match.GetCapturedPiecesByColor(Color.Black))
+			{
+				Console.Write(p + " ");
+			}
+			Console.ForegroundColor = defaultColor;
+
+			Console.WriteLine();
+		}
+
 		public static void PrintBoard(GameBoard board, bool[,] validMoves)
 		{
 			ConsoleColor defaultColor = Console.BackgroundColor;

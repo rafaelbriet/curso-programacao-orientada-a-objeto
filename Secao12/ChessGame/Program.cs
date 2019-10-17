@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using ChessGame.Board;
 using ChessGame.Chess;
 
@@ -16,10 +18,7 @@ namespace ChessGame
 				{
 					Console.Clear();
 					UI.PrintBoard(chessMatch.GameBoard);
-
-					Console.WriteLine();
-					Console.WriteLine("Current turn: {0}", chessMatch.CurrentTurn);
-					Console.WriteLine("Waiting for the {0} move", chessMatch.CurrentPlayer);
+					UI.PrintGameStatus(chessMatch);
 
 					Console.WriteLine();
 					Console.Write("Origin: ");
@@ -31,10 +30,10 @@ namespace ChessGame
 
 					Console.Clear();
 					UI.PrintBoard(chessMatch.GameBoard, validMoves);
+					UI.PrintGameStatus(chessMatch);
 
 					Console.WriteLine();
 					Console.Write("Destination: ");
-
 					Position destination = UI.ReadPosition().ToPosition();
 
 					chessMatch.ValidateDestinationPosition(origin, destination);
