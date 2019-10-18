@@ -20,6 +20,11 @@
 			Movements++;
 		}
 
+		public void DecreaseMovements()
+		{
+			Movements--;
+		}
+
 		public bool CanMove(Position position)
 		{
 			Piece piece = Board.GetPieceAt(position);

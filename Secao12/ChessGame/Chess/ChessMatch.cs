@@ -7,7 +7,7 @@ namespace ChessGame.Chess
 	{
 		public GameBoard GameBoard { get; private set; }
 		public bool HasMatchFinished { get; private set; }
-
+		public bool Check { get; private set; }
 		public int CurrentTurn { get; private set; }
 		public Color CurrentPlayer { get; private set; }
 
@@ -18,6 +18,7 @@ namespace ChessGame.Chess
 		{
 			GameBoard = new GameBoard(8, 8);
 			HasMatchFinished = false;
+			Check = false;
 			CurrentTurn = 1;
 			CurrentPlayer = Color.White;
 			gamePieces = new HashSet<Piece>();
@@ -26,7 +27,7 @@ namespace ChessGame.Chess
 			StartMatch();
 		}
 
-		public void Move(Position origin, Position destination)
+		public Piece DoMove(Position origin, Position destination)
 		{
 			Piece piece = GameBoard.RemovePiece(origin);
 
@@ -40,11 +41,43 @@ namespace ChessGame.Chess
 			{
 				capturedPieces.Add(capturedPiece);
 			}
+
+			return capturedPiece;
+		}
+
+		public void UndoMove(Position origin, Position destination, Piece capturedPiece)
+		{
+			Piece piece = GameBoard.RemovePiece(destination);
+
+			piece.DecreaseMovements();
+
+			if (capturedPiece != null)
+			{
+				GameBoard.AddPiece(capturedPiece, destination);
+				capturedPieces.Remove(capturedPiece);
+			}
+
+			GameBoard.AddPiece(piece, origin);
 		}
 
 		public void PerformMove(Position origin, Position destination)
 		{
-			Move(origin, destination);
+			Piece capturedPiece = DoMove(origin, destination);
+
+			if (IsInCheck(CurrentPlayer))
+			{
+				UndoMove(origin, destination, capturedPiece);
+				throw new GameBoardExecption("You can't put yourself in check.");
+			}
+
+			if (IsInCheck(GetOpponent(CurrentPlayer)))
+			{
+				Check = true;
+			}
+			else
+			{
+				Check = false;
+			}
 
 			CurrentTurn++;
 
@@ -107,6 +140,48 @@ namespace ChessGame.Chess
 			}
 
 			return pieces;
+		}
+
+		private Color GetOpponent(Color color)
+		{
+			if (color == Color.White)
+			{
+				return Color.Black;
+			}
+			else
+			{
+				return Color.White;
+			}
+		}
+
+		private Piece GetKing(Color color)
+		{
+			foreach (Piece p in GetPiecesByColor(color))
+			{
+				if (p is King)
+				{
+					return p;
+				}
+			}
+
+			return null;
+		}
+
+		private bool IsInCheck(Color color)
+		{
+			Piece king = GetKing(color);
+
+			foreach (Piece p in GetPiecesByColor(GetOpponent(color)))
+			{
+				bool[,] moves = p.ValidMoves();
+
+				if (moves[king.Position.Line, king.Position.Collumn])
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		private void ChangePlayer()

@@ -39,6 +39,12 @@ namespace ChessGame
 				Console.WriteLine("Waiting for the black player move");
 			}
 
+			if (match.Check == true)
+			{
+				Console.WriteLine();
+				Console.WriteLine("CHECK!");
+			}
+
 			Console.WriteLine();
 			Console.Write("White pieces captured: ");
 			foreach (Piece p in match.GetCapturedPiecesByColor(Color.White))
