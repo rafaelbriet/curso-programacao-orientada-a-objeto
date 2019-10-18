@@ -48,6 +48,10 @@ namespace ChessGame
 				}
 			}
 
+			Console.Clear();
+			UI.PrintBoard(chessMatch.GameBoard);
+			UI.PrintGameStatus(chessMatch);
+
 			Console.ReadLine();
 		}
 	}

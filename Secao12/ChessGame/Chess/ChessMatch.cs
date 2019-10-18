@@ -7,7 +7,7 @@ namespace ChessGame.Chess
 	{
 		public GameBoard GameBoard { get; private set; }
 		public bool HasMatchFinished { get; private set; }
-		public bool Check { get; private set; }
+		public bool IsInCheck { get; private set; }
 		public int CurrentTurn { get; private set; }
 		public Color CurrentPlayer { get; private set; }
 
@@ -18,7 +18,7 @@ namespace ChessGame.Chess
 		{
 			GameBoard = new GameBoard(8, 8);
 			HasMatchFinished = false;
-			Check = false;
+			IsInCheck = false;
 			CurrentTurn = 1;
 			CurrentPlayer = Color.White;
 			gamePieces = new HashSet<Piece>();
@@ -64,24 +64,30 @@ namespace ChessGame.Chess
 		{
 			Piece capturedPiece = DoMove(origin, destination);
 
-			if (IsInCheck(CurrentPlayer))
+			if (Check(CurrentPlayer))
 			{
 				UndoMove(origin, destination, capturedPiece);
 				throw new GameBoardExecption("You can't put yourself in check.");
 			}
 
-			if (IsInCheck(GetOpponent(CurrentPlayer)))
+			if (Check(GetOpponent(CurrentPlayer)))
 			{
-				Check = true;
+				IsInCheck = true;
 			}
 			else
 			{
-				Check = false;
+				IsInCheck = false;
 			}
 
-			CurrentTurn++;
-
-			ChangePlayer();
+			if (Checkmate(GetOpponent(CurrentPlayer)))
+			{
+				HasMatchFinished = true;
+			}
+			else
+			{
+				CurrentTurn++;
+				ChangePlayer();
+			}
 		}
 
 		public void ValidateOriginPosition(Position position)
@@ -167,7 +173,7 @@ namespace ChessGame.Chess
 			return null;
 		}
 
-		private bool IsInCheck(Color color)
+		private bool Check(Color color)
 		{
 			Piece king = GetKing(color);
 
@@ -182,6 +188,43 @@ namespace ChessGame.Chess
 			}
 
 			return false;
+		}
+
+		private bool Checkmate(Color color)
+		{
+			if (Check(color) == false)
+			{
+				return false;
+			}
+
+			foreach (Piece p in GetPiecesByColor(color))
+			{
+				bool[,] moves = p.ValidMoves();
+
+				for (int x = 0; x < GameBoard.Lines; x++)
+				{
+					for (int y = 0; y < GameBoard.Collumns; y++)
+					{
+						if (moves[x, y])
+						{
+							Position origin = p.Position;
+							Position destination = new Position(x, y);
+							Piece capturedPiece = DoMove(origin, destination);
+
+							bool isCheck = Check(color);
+
+							UndoMove(origin, destination, capturedPiece);
+
+							if (isCheck == false)
+							{
+								return false;
+							}
+						}
+					}
+				}
+			}
+
+			return true;
 		}
 
 		private void ChangePlayer()
@@ -204,19 +247,19 @@ namespace ChessGame.Chess
 
 		private void StartMatch()
 		{
+			//AddPiece(new Rook(GameBoard, Color.White), new ChessPosition(1, 'c'));
+			//AddPiece(new Rook(GameBoard, Color.White), new ChessPosition(2, 'c'));
+			//AddPiece(new Rook(GameBoard, Color.White), new ChessPosition(2, 'd'));
+			AddPiece(new Rook(GameBoard, Color.White), new ChessPosition(7, 'h'));
 			AddPiece(new Rook(GameBoard, Color.White), new ChessPosition(1, 'c'));
-			AddPiece(new Rook(GameBoard, Color.White), new ChessPosition(2, 'c'));
-			AddPiece(new Rook(GameBoard, Color.White), new ChessPosition(2, 'd'));
-			AddPiece(new Rook(GameBoard, Color.White), new ChessPosition(2, 'e'));
-			AddPiece(new Rook(GameBoard, Color.White), new ChessPosition(1, 'e'));
 			AddPiece(new King(GameBoard, Color.White), new ChessPosition(1, 'd'));
 
-			AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(7, 'c'));
-			AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(8, 'c'));
-			AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(7, 'd'));
-			AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(7, 'e'));
-			AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(8, 'e'));
-			AddPiece(new King(GameBoard, Color.Black), new ChessPosition(8, 'd'));
+			//AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(7, 'c'));
+			//AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(8, 'c'));
+			//AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(7, 'd'));
+			//AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(7, 'e'));
+			AddPiece(new Rook(GameBoard, Color.Black), new ChessPosition(8, 'b'));
+			AddPiece(new King(GameBoard, Color.Black), new ChessPosition(8, 'a'));
 		}
 	}
 }

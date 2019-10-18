@@ -30,20 +30,30 @@ namespace ChessGame
 			Console.WriteLine();
 			Console.WriteLine("Current turn: {0}", match.CurrentTurn);
 
-			if (match.CurrentPlayer == Color.White)
+			if (match.HasMatchFinished == false)
 			{
-				Console.WriteLine("Waiting for the white player move");
+				if (match.CurrentPlayer == Color.White)
+				{
+					Console.WriteLine("Waiting for the white player move");
+				}
+				else
+				{
+					Console.WriteLine("Waiting for the black player move");
+				}
+
+				if (match.IsInCheck == true)
+				{
+					Console.WriteLine();
+					Console.WriteLine("CHECK!");
+				}
 			}
 			else
 			{
-				Console.WriteLine("Waiting for the black player move");
+				Console.WriteLine();
+				Console.WriteLine("CHECKMATE!");
+				Console.WriteLine("{0} player is the winner.", match.CurrentPlayer);
 			}
 
-			if (match.Check == true)
-			{
-				Console.WriteLine();
-				Console.WriteLine("CHECK!");
-			}
 
 			Console.WriteLine();
 			Console.Write("White pieces captured: ");
