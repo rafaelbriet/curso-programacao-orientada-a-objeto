@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesWebApp.Models;
 using SalesWebApp.Data;
+using SalesWebApp.Services;
 
 namespace SalesWebApp
 {
@@ -41,6 +42,7 @@ namespace SalesWebApp
 		            options.UseMySql(Configuration.GetConnectionString("SalesWebAppContext"), builder => builder.MigrationsAssembly("SalesWebApp")));
 
 			services.AddScoped<SeedingService>();
+			services.AddScoped<SellerService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
