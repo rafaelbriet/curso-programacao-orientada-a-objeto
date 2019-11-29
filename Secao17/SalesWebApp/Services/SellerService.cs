@@ -22,6 +22,7 @@ namespace SalesWebApp.Services
 
 		public void Insert(Seller seller)
 		{
+			seller.Department = context.Department.First();
 			context.Add(seller);
 			context.SaveChanges();
 		}
