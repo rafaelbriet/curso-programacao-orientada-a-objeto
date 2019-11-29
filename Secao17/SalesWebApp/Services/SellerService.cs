@@ -19,5 +19,11 @@ namespace SalesWebApp.Services
 		{
 			return context.Seller.ToList();
 		}
+
+		public void Insert(Seller seller)
+		{
+			context.Add(seller);
+			context.SaveChanges();
+		}
 	}
 }
