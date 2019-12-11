@@ -2,6 +2,7 @@
 using SalesWebApp.Models;
 using SalesWebApp.Models.ViewModels;
 using SalesWebApp.Services;
+using SalesWebApp.Services.Exceptions;
 using System.Collections.Generic;
 
 namespace SalesWebApp.Controllers
@@ -49,6 +50,26 @@ namespace SalesWebApp.Controllers
 			return View(seller);
 		}
 
+		public IActionResult Update(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			Seller seller = sellerService.FindById(id.Value);
+
+			if (seller == null)
+			{
+				return NotFound();
+			}
+
+			List<Department> departments = departmentService.FindAll();
+			SellerFormViewModel formView = new SellerFormViewModel { Seller = seller, Departments = departments };
+
+			return View(formView);
+		}
+
 		public IActionResult Details(int? id)
 		{
 			if (id == null)
@@ -81,5 +102,29 @@ namespace SalesWebApp.Controllers
 			sellerService.Remove(id);
 			return RedirectToAction(nameof(Index));
 		}
-    }
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Update(int id, Seller seller)
+		{
+			if (id != seller.Id)
+			{
+				return BadRequest();
+			}
+
+			try
+			{
+				sellerService.Update(seller);
+				return RedirectToAction(nameof(Index));
+			}
+			catch(NotFoundException)
+			{
+				return NotFound();
+			}
+			catch(DbConcurrencyException)
+			{
+				return BadRequest();
+			}
+		}
+	}
 }

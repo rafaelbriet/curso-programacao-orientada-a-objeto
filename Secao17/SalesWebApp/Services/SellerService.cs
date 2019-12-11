@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using SalesWebApp.Services.Exceptions;
 
 namespace SalesWebApp.Services
 {
@@ -35,6 +36,24 @@ namespace SalesWebApp.Services
 			Seller seller = context.Seller.Find(id);
 			context.Seller.Remove(seller);
 			context.SaveChanges();
+		}
+
+		public void Update(Seller seller)
+		{
+			if (context.Seller.Any(s => s.Id == seller.Id) == false)
+			{
+				throw new NotFoundException("Id not found");
+			}
+
+			try
+			{
+				context.Update(seller);
+				context.SaveChanges();
+			}
+			catch (DbUpdateConcurrencyException e)
+			{
+				throw new DbConcurrencyException(e.Message);
+			}
 		}
 	}
 }
