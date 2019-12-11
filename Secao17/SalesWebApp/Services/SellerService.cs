@@ -18,9 +18,21 @@ namespace SalesWebApp.Services
 			return context.Seller.ToList();
 		}
 
+		public Seller FindById(int id)
+		{
+			return context.Seller.FirstOrDefault(seller => seller.Id == id);
+		}
+
 		public void Insert(Seller seller)
 		{
 			context.Add(seller);
+			context.SaveChanges();
+		}
+
+		public void Remove(int id)
+		{
+			Seller seller = context.Seller.Find(id);
+			context.Seller.Remove(seller);
 			context.SaveChanges();
 		}
 	}
