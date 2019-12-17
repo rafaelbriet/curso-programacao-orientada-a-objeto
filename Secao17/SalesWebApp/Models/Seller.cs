@@ -8,17 +8,27 @@ namespace SalesWebApp.Models
 	public class Seller
 	{
 		public int Id { get; set; }
+
+		[Required]
 		[Display(Name = "Nome")]
 		public string Name { get; set; }
+
+		[Required]
+		[EmailAddress]
 		[DataType(DataType.EmailAddress)]
 		public string Email { get; set; }
+
+		[Required]
 		[Display(Name = "Data de nascimento")]
 		[DataType(DataType.Date)]
 		public DateTime BirthDate { get; set; }
+
+		[Required]
 		[Display(Name = "Salário base")]
 		[DataType(DataType.Currency)]
 		public double BaseSalary { get; set; }
 		public Department Department { get; set; }
+
 		[Display(Name = "Departamento")]
 		public int DepartmentId { get; set; }
 		public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
