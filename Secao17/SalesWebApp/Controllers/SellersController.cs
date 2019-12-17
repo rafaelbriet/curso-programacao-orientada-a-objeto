@@ -4,6 +4,7 @@ using SalesWebApp.Models.ViewModels;
 using SalesWebApp.Services;
 using SalesWebApp.Services.Exceptions;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SalesWebApp.Controllers
 {
@@ -37,14 +38,14 @@ namespace SalesWebApp.Controllers
 		{
 			if (id == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id cannot be null"});
 			}
 
 			Seller seller = sellerService.FindById(id.Value);
 
 			if (seller == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id not found" });
 			}
 
 			return View(seller);
@@ -54,14 +55,14 @@ namespace SalesWebApp.Controllers
 		{
 			if (id == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id cannot be null" });
 			}
 
 			Seller seller = sellerService.FindById(id.Value);
 
 			if (seller == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id not found" });
 			}
 
 			List<Department> departments = departmentService.FindAll();
@@ -74,17 +75,24 @@ namespace SalesWebApp.Controllers
 		{
 			if (id == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id cannot be null" });
 			}
 
 			Seller seller = sellerService.FindById(id.Value);
 
 			if (seller == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id not found" });
 			}
 
 			return View(seller);
+		}
+
+		public IActionResult Error(string message)
+		{
+			ErrorViewModel viewModel = new ErrorViewModel { Message = message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };
+
+			return View(viewModel);
 		}
 
 		[HttpPost]
@@ -109,7 +117,7 @@ namespace SalesWebApp.Controllers
 		{
 			if (id != seller.Id)
 			{
-				return BadRequest();
+				return RedirectToAction(nameof(Error), new { message = "Ids doesn't match" });
 			}
 
 			try
@@ -117,13 +125,13 @@ namespace SalesWebApp.Controllers
 				sellerService.Update(seller);
 				return RedirectToAction(nameof(Index));
 			}
-			catch(NotFoundException)
+			catch(NotFoundException error)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = error.Message });
 			}
-			catch(DbConcurrencyException)
+			catch(DbConcurrencyException error)
 			{
-				return BadRequest();
+				return RedirectToAction(nameof(Error), new { message = error.Message });
 			}
 		}
 	}
